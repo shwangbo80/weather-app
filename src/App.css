@@ -1,38 +1,44 @@
-.App {
-  text-align: center;
+.main-container {
+  width: 600px;
+  margin-top: 75px;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 50px;
+  color: darkslategray;
+  background-color: gainsboro;
+  border-radius: 25px;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.weather-icon {
+  width: 300px;
+  margin-top: -50px;
+  margin-bottom: -50px;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
+.submit-button {
+  background-color: green;
+  font-size: 25px;
   color: white;
+  text-align: center;
+  padding-top: 5px;
+  width: 120px;
+  height: 48px;
+  border-radius: 10px;
+  transition: 0.5s;
 }
 
-.App-link {
-  color: #61dafb;
+.submit-button:hover {
+  background-color: darkgreen;
+  border-radius: 25px;
+  transition: 0.5s;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+/* .form-field {
+  width: 1000px;
 }
+
+.form-container {
+  width: 500px;
+  margin-left: auto;
+  margin-right: auto;
+} */
