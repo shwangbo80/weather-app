@@ -15,20 +15,20 @@
     margin-bottom: -50px;
 }
 
-/* .submit-button {
+.submit-button {
     background-color: green;
     font-size: 25px;
     color: white;
     text-align: center;
     padding-top: 5px;
-    width: 120px;
-    height: 48px;
+    width: 40px;
+    height: 40px;
     border-radius: 10px;
     transition: 0.5s;
 }
 
 .submit-button:hover {
     background-color: darkgreen;
-    border-radius: 25px;
+    border-radius: 12px;
     transition: 0.5s;
-} */
+}
