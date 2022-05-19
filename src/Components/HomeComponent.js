@@ -24,6 +24,7 @@ export default function HomeComponent() {
     const [sunRiseTime, setSunriseTime] = useState();
     const [sunSetTime, setSunSetTime] = useState();
     const [amPm, setAmPM] = useState();
+    const [validated, setValidated] = useState(false);
     const apiKey = "515fb9eb3863f83b7a54021b58d255ae";
 
     const handleCityNameInputChange = (event) => {
@@ -36,6 +37,12 @@ export default function HomeComponent() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
+        const form = e.currentTarget;
+        if (form.checkValidity() === false) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+        setValidated(true);
         fetchCitytWeather();
     };
 
@@ -248,23 +255,36 @@ export default function HomeComponent() {
                     <Row>
                         <Col md={3}></Col>
                         <Col md={6}>
-                            <Form onSubmit={handleSubmit}>
-                                <InputGroup className="mb-3 input-group-lg">
-                                    <FormControl
-                                        className="form-field"
-                                        type="text"
-                                        placeholder="Enter city name"
-                                        value={values.cityName}
-                                        onChange={handleCityNameInputChange}
-                                    />
-                                    <Button
-                                        variant="success"
-                                        id="button-addon2"
-                                        type="submit">
-                                        Button
-                                    </Button>
-                                </InputGroup>
-                            </Form>
+                            <Form.Group>
+                                <Form
+                                    onSubmit={handleSubmit}
+                                    noValidate
+                                    validated={validated}>
+                                    <InputGroup
+                                        hasValidation
+                                        className="mb-3 input-group-lg"
+                                        id="inputGroupPrepend">
+                                        <FormControl
+                                            className="form-field"
+                                            type="text"
+                                            placeholder="Enter city name"
+                                            aria-describedby="inputGroupPrepend"
+                                            required
+                                            value={values.cityName}
+                                            onChange={handleCityNameInputChange}
+                                        />
+                                        <Button
+                                            variant="success"
+                                            id="button-addon2"
+                                            type="submit">
+                                            Button
+                                        </Button>
+                                        <Form.Control.Feedback type="invalid">
+                                            Please choose city.
+                                        </Form.Control.Feedback>
+                                    </InputGroup>
+                                </Form>
+                            </Form.Group>
                         </Col>
                         <Col md={3}></Col>
                     </Row>
