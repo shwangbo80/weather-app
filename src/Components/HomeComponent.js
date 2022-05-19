@@ -19,8 +19,8 @@ export default function HomeComponent() {
     const [cityWeatherLoaded, setCityWeatherLoaded] = useState(false);
     const [hourlyWeather, setHourlyWeather] = useState([]);
     const [hourlyWeatherLoaded, setHourlyWeatherLoaded] = useState(false);
-    const [forcastWeather, setForcastWeather] = useState([]);
-    const [forcastLoaded, setForcastLoaded] = useState(false);
+    const [dailyWeather, setDailyWeather] = useState([]);
+    const [dailyLoaded, setDailyLoaded] = useState(false);
     const [sunRiseTime, setSunriseTime] = useState();
     const [sunSetTime, setSunSetTime] = useState();
     const [amPm, setAmPM] = useState();
@@ -47,9 +47,7 @@ export default function HomeComponent() {
             hours = hours - 12;
         }
         var minutes = "0" + date.getMinutes();
-        var seconds = "0" + date.getSeconds();
-        var formattedTime =
-            hours + ":" + minutes.substr(-2) + ":" + seconds.substr(-2);
+        var formattedTime = hours + ":" + minutes.substr(-2);
         return formattedTime;
     };
 
@@ -93,7 +91,7 @@ export default function HomeComponent() {
                 setSunSetTime(format_unix_timestamp(response.data.sys.sunset));
                 const lat = response.data.coord.lat;
                 const lon = response.data.coord.lon;
-                fetchSevenDay(lat, lon);
+                fetchDaily(lat, lon);
                 fetchHourlyWeather(lat, lon);
                 setCityWeatherLoaded(true);
                 console.log(response.data);
@@ -118,14 +116,14 @@ export default function HomeComponent() {
             });
     };
 
-    const fetchSevenDay = (latparam, lonparam) => {
+    const fetchDaily = (latparam, lonparam) => {
         axios
             .get(
                 `https://api.openweathermap.org/data/2.5/onecall?lat=${latparam}&lon=${lonparam}&exclude=minutely,hourly&appid=${apiKey}&units=imperial`
             )
             .then((response) => {
-                setForcastWeather(response.data);
-                setForcastLoaded(true);
+                setDailyWeather(response.data);
+                setDailyLoaded(true);
                 console.log(response.data.daily);
             })
             .catch((error) => {
@@ -149,7 +147,6 @@ export default function HomeComponent() {
                     <h2 className="mb-5">{cityWeather.weather[0].main}</h2>
                     <h4>Feels Like: {cityWeather.main.feels_like} deg</h4>
                     <h4>Humidity: {cityWeather.main.humidity}%</h4>
-                    <h4>Pressure: {cityWeather.main.pressure}</h4>
                     <h4>Temperature: {cityWeather.main.temp}</h4>
                     <h4>Max: {cityWeather.main.temp_max}</h4>
                     <h4>Low: {cityWeather.main.temp_min}</h4>
@@ -162,18 +159,31 @@ export default function HomeComponent() {
         }
     };
 
+    const RenderHourlyHeader = () => {
+        if (hourlyWeatherLoaded) {
+            return (
+                <div>
+                    <hr></hr>
+                    <h1 className=" mt-5 display-4 text-center">3 Hour</h1>
+                </div>
+            );
+        } else {
+            return <div></div>;
+        }
+    };
+
     const RenderHourly = () => {
         if (hourlyWeatherLoaded) {
             const data = hourlyWeather.list.slice(0, 12).map((item, key) => {
                 return (
-                    <Col xs={3} className="text-center" key={key}>
+                    <Col xs={2} className="text-center" key={key}>
                         <Image
                             fluid
                             className="mx-auto d-block"
                             src={`http://openweathermap.org/img/wn/${item.weather[0].icon}@4x.png`}
                             alt={`http://openweathermap.org/img/wn/${item.weather[0].description}`}
                         />
-                        <h4>{format_unix_hour(item.dt)}</h4>
+                        <h6>{format_unix_hour(item.dt)}</h6>
                         <h6>{item.main.temp.toString().substring(0, 2)}</h6>
                     </Col>
                 );
@@ -184,39 +194,46 @@ export default function HomeComponent() {
         }
     };
 
-    const RenderSevenDay = () => {
-        if (forcastLoaded) {
-            const forcataData = forcastWeather.daily
-                .slice(1)
-                .map((item, key) => {
-                    return (
-                        <div className="d-flex" key={key}>
-                            <Col></Col>
-                            <Col xs={2}>
-                                <Image
-                                    fluid
-                                    className="mx-auto d-block forcast-icon"
-                                    src={`http://openweathermap.org/img/wn/${item.weather[0].icon}@4x.png`}
-                                    alt={`http://openweathermap.org/img/wn/${item.weather[0].description}`}
-                                />
-                            </Col>
-                            <Col xs={8} className="d-flex align-items-center">
-                                <h3 className="fw-bold">
-                                    {format_unix_date(item.dt)}
-                                </h3>
-                                <h5 className="ms-3">
-                                    High:{" "}
-                                    {item.temp.max.toString().substring(0, 2)}
-                                </h5>
-                                <h5 className="ms-3">
-                                    Low:{" "}
-                                    {item.temp.min.toString().substring(0, 2)}
-                                </h5>
-                            </Col>
-                            <Col></Col>
-                        </div>
-                    );
-                });
+    const RenderDailyHeader = () => {
+        if (dailyLoaded) {
+            return (
+                <div>
+                    <hr></hr>
+                    <h1 className=" mt-5 display-4 text-center">Daily</h1>
+                </div>
+            );
+        } else {
+            return <div></div>;
+        }
+    };
+
+    const RenderDaily = () => {
+        if (dailyLoaded) {
+            const forcataData = dailyWeather.daily.slice(1).map((item, key) => {
+                return (
+                    <div className="d-flex align-items-center ps-4" key={key}>
+                        <Col xs={3}>
+                            <Image
+                                fluid
+                                className="mx-auto d-block forcast-icon"
+                                src={`http://openweathermap.org/img/wn/${item.weather[0].icon}@4x.png`}
+                                alt={`http://openweathermap.org/img/wn/${item.weather[0].description}`}
+                            />
+                        </Col>
+                        <Col xs={9} className="d-flex">
+                            <h3 className="fw-bold">
+                                {format_unix_date(item.dt)}
+                            </h3>
+                            <h5 className="ms-3">
+                                High: {item.temp.max.toString().substring(0, 2)}
+                            </h5>
+                            <h5 className="ms-3">
+                                Low: {item.temp.min.toString().substring(0, 2)}
+                            </h5>
+                        </Col>
+                    </div>
+                );
+            });
             return forcataData;
         } else {
             return <div />;
@@ -232,7 +249,7 @@ export default function HomeComponent() {
                         <Col md={3}></Col>
                         <Col md={6}>
                             <Form onSubmit={handleSubmit}>
-                                <InputGroup className="mb-3">
+                                <InputGroup className="mb-3 input-group-lg">
                                     <FormControl
                                         className="form-field"
                                         type="text"
@@ -253,31 +270,29 @@ export default function HomeComponent() {
                     </Row>
                     <Container className="mt-5">
                         <Row className="sub-container">
-                            <Col md={4} className="weather-container">
-                                <div>
-                                    <RenderWeather />
-                                </div>
+                            <Col md={4}></Col>
+                            <Col md={4}>
+                                <Row>
+                                    <Col md={12} className="weather-container">
+                                        <div className="mb-5">
+                                            <RenderWeather />
+                                        </div>
+                                    </Col>
+                                    <Col md={12} className="">
+                                        <div>
+                                            <RenderHourlyHeader />
+                                            <Row className="mb-5">
+                                                <RenderHourly />
+                                            </Row>
+                                        </div>
+                                    </Col>
+                                    <Col md={12}>
+                                        <RenderDailyHeader />
+                                        <RenderDaily />
+                                    </Col>
+                                </Row>
                             </Col>
-                            <Col md={4} className="weather-container-center">
-                                <div>
-                                    <h1 className="text-center mt-5 display-4">
-                                        3 Hour
-                                    </h1>
-                                    <Row>
-                                        <RenderHourly />
-                                    </Row>
-                                </div>
-                            </Col>
-                            <Col md={3} className="weather-container">
-                                <div>
-                                    <h1 className="text-center mt-5 display-4">
-                                        Daily
-                                    </h1>
-                                    <Row>
-                                        <RenderSevenDay />
-                                    </Row>
-                                </div>
-                            </Col>
+                            <Col md={4}></Col>
                         </Row>
                     </Container>
                 </Row>
