@@ -89,10 +89,10 @@ export default function HomeComponent() {
 
     const RenderLoader = () => {
         return (
-            <div className="text-center">
+            <div className="loader-img text-center">
                 <Image
                     className="loader-img"
-                    src="https://c.tenor.com/4qaVLgQED40AAAAM/cloud-rain.gif"></Image>
+                    src="https://i.pinimg.com/originals/8e/e2/12/8ee212dac057d412972e0c8cc164deee.gif"></Image>
             </div>
         );
     };
@@ -274,7 +274,7 @@ export default function HomeComponent() {
                 <div className="text-center mb-5">
                     <Image
                         className="weather-logo"
-                        src="https://www.iphonefaq.org/files/styles/large/public/ios-weather.jpg"
+                        src="https://cdn.iconscout.com/icon/free/png-256/cloudy-weather-11-1147979.png"
                     />
                 </div>
                 <Row className="form-container d-flex justify-content-center">
