@@ -277,7 +277,7 @@ export default function HomeComponent() {
                         src="https://www.iphonefaq.org/files/styles/large/public/ios-weather.jpg"
                     />
                 </div>
-                <Row className="form-container">
+                <Row className="form-container d-flex justify-content-center">
                     <Row>
                         <Col md={3}></Col>
                         <Col md={6}>
