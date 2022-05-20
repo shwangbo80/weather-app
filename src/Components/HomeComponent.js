@@ -175,12 +175,25 @@ export default function HomeComponent() {
                         alt={`http://openweathermap.org/img/wn/${cityWeather.weather[0].description}`}
                     />
                     <h2 className="mb-5">{cityWeather.weather[0].main}</h2>
-                    <h1 className="mb-5 display-1">{cityWeather.main.temp}</h1>
-                    <h4>Feels Like: {cityWeather.main.feels_like} deg</h4>
+                    <h1 className="mb-5 display-1">
+                        {cityWeather.main.temp.toString().substring(0, 2)}&deg;
+                    </h1>
+                    <h4>
+                        Feels Like:
+                        {cityWeather.main.feels_like.toString().substring(0, 2)}
+                        &deg;
+                    </h4>
                     <h4>Humidity: {cityWeather.main.humidity}%</h4>
-                    <h4>Temperature: {cityWeather.main.temp}</h4>
-                    <h4>Max: {cityWeather.main.temp_max}</h4>
-                    <h4>Low: {cityWeather.main.temp_min}</h4>
+                    <h4>
+                        Max:
+                        {cityWeather.main.temp_max.toString().substring(0, 2)}
+                        &deg;
+                    </h4>
+                    <h4>
+                        Low:
+                        {cityWeather.main.temp_min.toString().substring(0, 2)}
+                        &deg;
+                    </h4>
                     <h4>Sunrise: {sunRiseTime}am</h4>
                     <h4>Sunset: {sunSetTime}pm</h4>
                 </div>
@@ -217,7 +230,9 @@ export default function HomeComponent() {
                             alt={`http://openweathermap.org/img/wn/${item.weather[0].description}`}
                         />
                         <h6>{format_unix_hour(item.dt)}</h6>
-                        <h6>{item.main.temp.toString().substring(0, 2)}</h6>
+                        <h6>
+                            {item.main.temp.toString().substring(0, 2)}&deg;
+                        </h6>
                     </Col>
                 );
             });
@@ -244,7 +259,9 @@ export default function HomeComponent() {
         } else if (dailyLoaded) {
             const forcataData = dailyWeather.daily.slice(1).map((item, key) => {
                 return (
-                    <div className="d-flex justify-content-center" key={key}>
+                    <div
+                        className="d-flex justify-content-center align-items-center"
+                        key={key}>
                         <Col xs={3}>
                             <Image
                                 fluid
@@ -259,9 +276,11 @@ export default function HomeComponent() {
                             </h3>
                             <h5 className="ms-3">
                                 High: {item.temp.max.toString().substring(0, 2)}
+                                &deg;
                             </h5>
                             <h5 className="ms-3">
                                 Low: {item.temp.min.toString().substring(0, 2)}
+                                &deg;
                             </h5>
                         </Col>
                     </div>
