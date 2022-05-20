@@ -105,8 +105,8 @@ export default function HomeComponent() {
             .then((response) => {
                 setCityWeather(response.data);
                 setCityWeatherLoaded(false);
-                setHourlyWeatherLoaded(false);
-                setDailyLoaded(false);
+                // setHourlyWeatherLoaded(false);
+                // setDailyLoaded(false);
                 setFetching(true);
                 setSunriseTime(
                     format_unix_timestamp(response.data.sys.sunrise)
@@ -119,7 +119,7 @@ export default function HomeComponent() {
                     fetchHourlyWeather(lat, lon);
                     setCityWeatherLoaded(true);
                     setFetching(false);
-                }, 4000);
+                }, 3000);
                 console.log(response.data);
             })
             .catch((error) => {
@@ -133,6 +133,7 @@ export default function HomeComponent() {
                 `https://api.openweathermap.org/data/2.5/forecast?lat=${latparam}&lon=${lonparam}&appid=${apiKey}&units=imperial`
             )
             .then((response) => {
+                setHourlyWeatherLoaded(false);
                 setHourlyWeather(response.data);
                 setHourlyWeatherLoaded(true);
                 console.log(response.data);
@@ -148,6 +149,7 @@ export default function HomeComponent() {
                 `https://api.openweathermap.org/data/2.5/onecall?lat=${latparam}&lon=${lonparam}&exclude=minutely,hourly&appid=${apiKey}&units=imperial`
             )
             .then((response) => {
+                setDailyLoaded(false);
                 setDailyWeather(response.data);
                 setDailyLoaded(true);
                 console.log(response.data.daily);
@@ -163,7 +165,7 @@ export default function HomeComponent() {
         } else if (cityWeatherLoaded) {
             return (
                 <div className="text-center">
-                    <h1 className="text-center mt-5 display-4">
+                    <h1 className="text-center">
                         {cityWeather.name}, {cityWeather.sys.country}
                     </h1>
                     <Image
@@ -173,6 +175,7 @@ export default function HomeComponent() {
                         alt={`http://openweathermap.org/img/wn/${cityWeather.weather[0].description}`}
                     />
                     <h2 className="mb-5">{cityWeather.weather[0].main}</h2>
+                    <h1 className="mb-5 display-1">{cityWeather.main.temp}</h1>
                     <h4>Feels Like: {cityWeather.main.feels_like} deg</h4>
                     <h4>Humidity: {cityWeather.main.humidity}%</h4>
                     <h4>Temperature: {cityWeather.main.temp}</h4>
@@ -192,7 +195,7 @@ export default function HomeComponent() {
             return (
                 <div>
                     <hr></hr>
-                    <h1 className=" mt-5 display-4 text-center">3 Hour</h1>
+                    <h1 className=" mt-5 display-5 text-center">3 Hour</h1>
                 </div>
             );
         } else {
@@ -227,7 +230,7 @@ export default function HomeComponent() {
             return (
                 <div>
                     <hr></hr>
-                    <h1 className=" mt-5 display-4 text-center">Daily</h1>
+                    <h1 className=" mt-5 display-5 text-center">Daily</h1>
                 </div>
             );
         } else {
