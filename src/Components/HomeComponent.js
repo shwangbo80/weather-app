@@ -15,6 +15,7 @@ export default function HomeComponent() {
     const [values, setValues] = useState({
         cityName: "",
     });
+    const [fetching, setFetching] = useState(false);
     const [cityWeather, setCityWeather] = useState([]);
     const [cityWeatherLoaded, setCityWeatherLoaded] = useState(false);
     const [hourlyWeather, setHourlyWeather] = useState([]);
@@ -23,7 +24,6 @@ export default function HomeComponent() {
     const [dailyLoaded, setDailyLoaded] = useState(false);
     const [sunRiseTime, setSunriseTime] = useState();
     const [sunSetTime, setSunSetTime] = useState();
-    const [amPm, setAmPM] = useState();
     const [validated, setValidated] = useState(false);
     const apiKey = "515fb9eb3863f83b7a54021b58d255ae";
 
@@ -44,6 +44,8 @@ export default function HomeComponent() {
         }
         setValidated(true);
         fetchCitytWeather();
+        fetchDailyWeather();
+        fetchHourlyWeather();
     };
 
     const format_unix_timestamp = (unix_data) => {
@@ -85,6 +87,16 @@ export default function HomeComponent() {
         return dateName;
     };
 
+    const RenderLoader = () => {
+        return (
+            <div className="text-center">
+                <Image
+                    className="loader-img"
+                    src="https://c.tenor.com/4qaVLgQED40AAAAM/cloud-rain.gif"></Image>
+            </div>
+        );
+    };
+
     const fetchCitytWeather = () => {
         axios
             .get(
@@ -92,15 +104,22 @@ export default function HomeComponent() {
             )
             .then((response) => {
                 setCityWeather(response.data);
+                setCityWeatherLoaded(false);
+                setHourlyWeatherLoaded(false);
+                setDailyLoaded(false);
+                setFetching(true);
                 setSunriseTime(
                     format_unix_timestamp(response.data.sys.sunrise)
                 );
                 setSunSetTime(format_unix_timestamp(response.data.sys.sunset));
                 const lat = response.data.coord.lat;
                 const lon = response.data.coord.lon;
-                fetchDaily(lat, lon);
-                fetchHourlyWeather(lat, lon);
-                setCityWeatherLoaded(true);
+                setTimeout(() => {
+                    fetchDailyWeather(lat, lon);
+                    fetchHourlyWeather(lat, lon);
+                    setCityWeatherLoaded(true);
+                    setFetching(false);
+                }, 4000);
                 console.log(response.data);
             })
             .catch((error) => {
@@ -123,7 +142,7 @@ export default function HomeComponent() {
             });
     };
 
-    const fetchDaily = (latparam, lonparam) => {
+    const fetchDailyWeather = (latparam, lonparam) => {
         axios
             .get(
                 `https://api.openweathermap.org/data/2.5/onecall?lat=${latparam}&lon=${lonparam}&exclude=minutely,hourly&appid=${apiKey}&units=imperial`
@@ -139,7 +158,9 @@ export default function HomeComponent() {
     };
 
     const RenderWeather = () => {
-        if (cityWeatherLoaded) {
+        if (fetching) {
+            return <RenderLoader />;
+        } else if (cityWeatherLoaded) {
             return (
                 <div className="text-center">
                     <h1 className="text-center mt-5 display-4">
@@ -250,7 +271,12 @@ export default function HomeComponent() {
     return (
         <div className="main-container">
             <Container fluid>
-                <h1 className="text-center mb-3">Weather</h1>
+                <div className="text-center mb-5">
+                    <Image
+                        className="weather-logo"
+                        src="https://www.iphonefaq.org/files/styles/large/public/ios-weather.jpg"
+                    />
+                </div>
                 <Row className="form-container">
                     <Row>
                         <Col md={3}></Col>
@@ -274,7 +300,7 @@ export default function HomeComponent() {
                                             onChange={handleCityNameInputChange}
                                         />
                                         <Button
-                                            variant="success"
+                                            variant="primary"
                                             id="button-addon2"
                                             type="submit">
                                             Button

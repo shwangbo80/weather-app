@@ -9,7 +9,7 @@
 
 .main-container {
     width: 100%;
-    margin-top: 75px;
+    margin-top: 0px;
     margin-left: auto;
     margin-right: auto;
     padding: 25px;
@@ -18,6 +18,19 @@
     border-radius: 25px;
 }
 
+.weather-logo {
+    margin: 0 auto 0 auto;
+    width: 200px;
+}
+
+.loader-img {
+    width: 200px;
+}
+
+/* .loader-container {
+    text-align: center;
+    margin: 0 auto 0 auto;
+} */
 /* .weather-container {
     width: 100px;
     background-color: white;
