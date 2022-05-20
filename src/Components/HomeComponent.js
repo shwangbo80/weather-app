@@ -105,8 +105,8 @@ export default function HomeComponent() {
             .then((response) => {
                 setCityWeather(response.data);
                 setCityWeatherLoaded(false);
-                // setHourlyWeatherLoaded(false);
-                // setDailyLoaded(false);
+                setHourlyWeatherLoaded(false);
+                setDailyLoaded(false);
                 setFetching(true);
                 setSunriseTime(
                     format_unix_timestamp(response.data.sys.sunrise)
@@ -191,20 +191,22 @@ export default function HomeComponent() {
     };
 
     const RenderHourlyHeader = () => {
-        if (hourlyWeatherLoaded) {
+        if (!hourlyWeatherLoaded) {
+            return <div></div>;
+        } else if (hourlyWeatherLoaded) {
             return (
                 <div>
                     <hr></hr>
                     <h1 className=" mt-5 display-5 text-center">3 Hour</h1>
                 </div>
             );
-        } else {
-            return <div></div>;
         }
     };
 
     const RenderHourly = () => {
-        if (hourlyWeatherLoaded) {
+        if (!hourlyWeatherLoaded) {
+            return <div></div>;
+        } else if (hourlyWeatherLoaded) {
             const data = hourlyWeather.list.slice(0, 12).map((item, key) => {
                 return (
                     <Col xs={2} className="text-center" key={key}>
@@ -220,26 +222,26 @@ export default function HomeComponent() {
                 );
             });
             return data;
-        } else {
-            return <div></div>;
         }
     };
 
     const RenderDailyHeader = () => {
-        if (dailyLoaded) {
+        if (!dailyLoaded) {
+            return <div></div>;
+        } else if (dailyLoaded) {
             return (
                 <div>
                     <hr></hr>
                     <h1 className=" mt-5 display-5 text-center">Daily</h1>
                 </div>
             );
-        } else {
-            return <div></div>;
         }
     };
 
     const RenderDaily = () => {
-        if (dailyLoaded) {
+        if (!dailyLoaded) {
+            return <div />;
+        } else if (dailyLoaded) {
             const forcataData = dailyWeather.daily.slice(1).map((item, key) => {
                 return (
                     <div className="d-flex justify-content-center" key={key}>
@@ -266,8 +268,6 @@ export default function HomeComponent() {
                 );
             });
             return forcataData;
-        } else {
-            return <div />;
         }
     };
 
@@ -291,10 +291,10 @@ export default function HomeComponent() {
                                     validated={validated}>
                                     <InputGroup
                                         hasValidation
-                                        className="mb-3 input-group-lg"
+                                        className="mb-3"
                                         id="inputGroupPrepend">
                                         <FormControl
-                                            className="form-field"
+                                            className="form-field form-control-lg"
                                             type="text"
                                             placeholder="Enter city name"
                                             aria-describedby="inputGroupPrepend"
