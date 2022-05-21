@@ -105,8 +105,6 @@ export default function HomeComponent() {
             .then((response) => {
                 setCityWeather(response.data);
                 setCityWeatherLoaded(false);
-                setHourlyWeatherLoaded(false);
-                setDailyLoaded(false);
                 setFetching(true);
                 setSunriseTime(
                     format_unix_timestamp(response.data.sys.sunrise)
@@ -164,39 +162,50 @@ export default function HomeComponent() {
             return <RenderLoader />;
         } else if (cityWeatherLoaded) {
             return (
-                <div className="text-center">
-                    <h1 className="text-center">
-                        {cityWeather.name}, {cityWeather.sys.country}
-                    </h1>
-                    <Image
-                        fluid
-                        className="mx-auto d-block weather-icon"
-                        src={`http://openweathermap.org/img/wn/${cityWeather.weather[0].icon}@4x.png`}
-                        alt={`http://openweathermap.org/img/wn/${cityWeather.weather[0].description}`}
-                    />
-                    <h2 className="mb-5">{cityWeather.weather[0].main}</h2>
-                    <h1 className="mb-5 display-1">
-                        {cityWeather.main.temp.toString().substring(0, 2)}&deg;
-                    </h1>
-                    <h4>
-                        Feels Like:
-                        {cityWeather.main.feels_like.toString().substring(0, 2)}
-                        &deg;
-                    </h4>
-                    <h4>Humidity: {cityWeather.main.humidity}%</h4>
-                    <h4>
-                        Max:
-                        {cityWeather.main.temp_max.toString().substring(0, 2)}
-                        &deg;
-                    </h4>
-                    <h4>
-                        Low:
-                        {cityWeather.main.temp_min.toString().substring(0, 2)}
-                        &deg;
-                    </h4>
-                    <h4>Sunrise: {sunRiseTime}am</h4>
-                    <h4>Sunset: {sunSetTime}pm</h4>
-                </div>
+                <Row className="text-center">
+                    <Col sm={6}>
+                        <h1>
+                            {cityWeather.name}, {cityWeather.sys.country}
+                        </h1>
+                        <Image
+                            fluid
+                            className="mx-auto py-3 d-block weather-icon"
+                            src={`http://openweathermap.org/img/wn/${cityWeather.weather[0].icon}@4x.png`}
+                            alt={`http://openweathermap.org/img/wn/${cityWeather.weather[0].description}`}
+                        />
+                        <h2 className="mb-5">{cityWeather.weather[0].main}</h2>
+                    </Col>
+                    <Col sm={6}>
+                        <h1 className="mb-5 display-1">
+                            {cityWeather.main.temp.toString().substring(0, 2)}
+                            &deg;
+                        </h1>
+                        <h6>
+                            Feels Like:
+                            {cityWeather.main.feels_like
+                                .toString()
+                                .substring(0, 2)}
+                            &deg;
+                        </h6>
+                        <h6>Humidity: {cityWeather.main.humidity}%</h6>
+                        <h6>
+                            Max:
+                            {cityWeather.main.temp_max
+                                .toString()
+                                .substring(0, 2)}
+                            &deg;
+                        </h6>
+                        <h6>
+                            Low:
+                            {cityWeather.main.temp_min
+                                .toString()
+                                .substring(0, 2)}
+                            &deg;
+                        </h6>
+                        <h6>Sunrise: {sunRiseTime}am</h6>
+                        <h6>Sunset: {sunSetTime}pm</h6>
+                    </Col>
+                </Row>
             );
         } else {
             return <div></div>;
@@ -260,9 +269,9 @@ export default function HomeComponent() {
             const forcataData = dailyWeather.daily.slice(1).map((item, key) => {
                 return (
                     <div
-                        className="d-flex justify-content-center align-items-center"
+                        className="d-flex justify-content-center align-items-center daily-container"
                         key={key}>
-                        <Col xs={3}>
+                        <Col xs={6}>
                             <Image
                                 fluid
                                 className="mx-auto d-block forcast-icon"
@@ -270,7 +279,7 @@ export default function HomeComponent() {
                                 alt={`http://openweathermap.org/img/wn/${item.weather[0].description}`}
                             />
                         </Col>
-                        <Col xs={9} className="d-flex">
+                        <Col xs={6} className="d-flex align-items-center">
                             <h3 className="fw-bold">
                                 {format_unix_date(item.dt)}
                             </h3>
@@ -301,8 +310,8 @@ export default function HomeComponent() {
                 </div>
                 <Row className="form-container d-flex justify-content-center">
                     <Row>
-                        <Col md={3}></Col>
-                        <Col md={6}>
+                        <Col md={2}></Col>
+                        <Col md={8}>
                             <Form.Group>
                                 <Form
                                     onSubmit={handleSubmit}
@@ -346,8 +355,8 @@ export default function HomeComponent() {
                     </Row>
                     <Container className="mt-5">
                         <Row className="sub-container">
-                            <Col md={4}></Col>
-                            <Col md={4}>
+                            <Col md={3}></Col>
+                            <Col md={6}>
                                 <Row>
                                     <Col md={12} className="weather-container">
                                         <div className="mb-5">
@@ -368,7 +377,7 @@ export default function HomeComponent() {
                                     </Col>
                                 </Row>
                             </Col>
-                            <Col md={4}></Col>
+                            <Col md={3}></Col>
                         </Row>
                     </Container>
                 </Row>
