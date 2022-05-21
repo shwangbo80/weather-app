@@ -371,6 +371,11 @@ export default function HomeComponent() {
                             <Col lg={2} xl={4}></Col>
                         </Row>
                     </Container>
+                    <a
+                        href="https://www.soohwangbo.com"
+                        className="text-center mb-0">
+                        <p>Developed by Soo Hwangbo</p>
+                    </a>
                 </Row>
             </Container>
         </div>
