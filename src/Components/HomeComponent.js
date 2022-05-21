@@ -221,7 +221,7 @@ export default function HomeComponent() {
             return (
                 <div>
                     <hr></hr>
-                    <h1 className="mt-5 display-5 text-center">3 Hour</h1>
+                    <h1 className="mt-5 mb-4 display-5 text-center">3 Hour</h1>
                 </div>
             );
         }
@@ -233,7 +233,7 @@ export default function HomeComponent() {
         } else if (hourlyWeatherLoaded) {
             const data = hourlyWeather.list.slice(0, 12).map((item, key) => {
                 return (
-                    <Col xs={2} className="text-center mb-5" key={key}>
+                    <Col xs={2} className="text-center mb-3" key={key}>
                         <Image
                             fluid
                             className="mx-auto d-block"
@@ -286,16 +286,16 @@ export default function HomeComponent() {
                             />
                         </Col>
                         <Col md={1} className="me-4">
-                            <h3>
+                            <h4>
                                 {item.temp.max.toString().substring(0, 2)}
                                 &deg;
-                            </h3>
+                            </h4>
                         </Col>
                         <Col md={1}>
-                            <h3>
+                            <h4>
                                 {item.temp.min.toString().substring(0, 2)}
                                 &deg;
-                            </h3>
+                            </h4>
                         </Col>
                     </div>
                 );
