@@ -44,8 +44,6 @@ export default function HomeComponent() {
         }
         setValidated(true);
         fetchCitytWeather();
-        fetchDailyWeather();
-        fetchHourlyWeather();
     };
 
     const format_unix_timestamp = (unix_data) => {
@@ -175,36 +173,40 @@ export default function HomeComponent() {
                         />
                         <h2 className="mb-5">{cityWeather.weather[0].main}</h2>
                     </Col>
-                    <Col sm={6}>
+                    <Col sm={6} className="mb-5">
                         <h1 className="mb-5 display-1">
                             {cityWeather.main.temp.toString().substring(0, 2)}
                             &deg;
                         </h1>
-                        <h6>
+                        <h4>
                             Feels Like:
                             {cityWeather.main.feels_like
                                 .toString()
                                 .substring(0, 2)}
                             &deg;
-                        </h6>
-                        <h6>Humidity: {cityWeather.main.humidity}%</h6>
-                        <h6>
+                        </h4>
+                        <h4>Humidity: {cityWeather.main.humidity}%</h4>
+                        <h4>
                             Max:
                             {cityWeather.main.temp_max
                                 .toString()
                                 .substring(0, 2)}
                             &deg;
-                        </h6>
-                        <h6>
+                        </h4>
+                        <h4>
                             Low:
                             {cityWeather.main.temp_min
                                 .toString()
                                 .substring(0, 2)}
                             &deg;
-                        </h6>
-                        <h6>Sunrise: {sunRiseTime}am</h6>
-                        <h6>Sunset: {sunSetTime}pm</h6>
+                        </h4>
+                        <h4>Sunrise: {sunRiseTime}am</h4>
+                        <h4>Sunset: {sunSetTime}pm</h4>
                     </Col>
+                    <RenderHourlyHeader />
+                    <RenderHourly />
+                    <RenderDailyHeader />
+                    <RenderDaily />
                 </Row>
             );
         } else {
@@ -213,25 +215,25 @@ export default function HomeComponent() {
     };
 
     const RenderHourlyHeader = () => {
-        if (!hourlyWeatherLoaded) {
+        if (fetching) {
             return <div></div>;
         } else if (hourlyWeatherLoaded) {
             return (
                 <div>
                     <hr></hr>
-                    <h1 className=" mt-5 display-5 text-center">3 Hour</h1>
+                    <h1 className="mt-5 display-5 text-center">3 Hour</h1>
                 </div>
             );
         }
     };
 
     const RenderHourly = () => {
-        if (!hourlyWeatherLoaded) {
+        if (fetching) {
             return <div></div>;
         } else if (hourlyWeatherLoaded) {
             const data = hourlyWeather.list.slice(0, 12).map((item, key) => {
                 return (
-                    <Col xs={2} className="text-center" key={key}>
+                    <Col xs={2} className="text-center mb-5" key={key}>
                         <Image
                             fluid
                             className="mx-auto d-block"
@@ -250,7 +252,7 @@ export default function HomeComponent() {
     };
 
     const RenderDailyHeader = () => {
-        if (!dailyLoaded) {
+        if (fetching) {
             return <div></div>;
         } else if (dailyLoaded) {
             return (
@@ -263,34 +265,37 @@ export default function HomeComponent() {
     };
 
     const RenderDaily = () => {
-        if (!dailyLoaded) {
+        if (fetching) {
             return <div />;
         } else if (dailyLoaded) {
             const forcataData = dailyWeather.daily.slice(1).map((item, key) => {
                 return (
                     <div
-                        className="d-flex justify-content-center align-items-center daily-container"
+                        className="px-5 d-flex justify-content-center align-items-center daily-container text-center"
                         key={key}>
-                        <Col xs={6}>
+                        <Col md={2}>
+                            <h2 className="fw-bol">
+                                {format_unix_date(item.dt)}
+                            </h2>
+                        </Col>
+                        <Col md={2} className="me-3">
                             <Image
                                 fluid
-                                className="mx-auto d-block forcast-icon"
                                 src={`http://openweathermap.org/img/wn/${item.weather[0].icon}@4x.png`}
                                 alt={`http://openweathermap.org/img/wn/${item.weather[0].description}`}
                             />
                         </Col>
-                        <Col xs={6} className="d-flex align-items-center">
-                            <h3 className="fw-bold">
-                                {format_unix_date(item.dt)}
+                        <Col md={1} className="me-5">
+                            <h3>
+                                {item.temp.max.toString().substring(0, 2)}
+                                &deg;
                             </h3>
-                            <h5 className="ms-3">
-                                High: {item.temp.max.toString().substring(0, 2)}
+                        </Col>
+                        <Col md={1}>
+                            <h3>
+                                {item.temp.min.toString().substring(0, 2)}
                                 &deg;
-                            </h5>
-                            <h5 className="ms-3">
-                                Low: {item.temp.min.toString().substring(0, 2)}
-                                &deg;
-                            </h5>
+                            </h3>
                         </Col>
                     </div>
                 );
@@ -302,82 +307,68 @@ export default function HomeComponent() {
     return (
         <div className="main-container">
             <Container fluid>
-                <div className="text-center mb-5">
+                <div className="text-center">
                     <Image
                         className="weather-logo"
                         src="https://cdn.iconscout.com/icon/free/png-256/cloudy-weather-11-1147979.png"
                     />
                 </div>
                 <Row className="form-container d-flex justify-content-center">
-                    <Row>
-                        <Col md={2}></Col>
-                        <Col md={8}>
-                            <Form.Group>
-                                <Form
-                                    onSubmit={handleSubmit}
-                                    noValidate
-                                    validated={validated}>
-                                    <InputGroup
-                                        hasValidation
-                                        className="mb-3"
-                                        id="inputGroupPrepend">
-                                        <FormControl
-                                            className="form-field form-control-lg"
-                                            type="text"
-                                            placeholder="Enter city name"
-                                            aria-describedby="inputGroupPrepend"
-                                            required
-                                            value={values.cityName}
-                                            onChange={handleCityNameInputChange}
-                                        />
-                                        <Button
-                                            variant="primary"
-                                            id="button-addon2"
-                                            type="submit">
-                                            <svg
-                                                xmlns="http://www.w3.org/2000/svg"
-                                                width="16"
-                                                height="16"
-                                                fill="currentColor"
-                                                class="bi bi-search"
-                                                viewBox="0 0 16 16">
-                                                <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z" />
-                                            </svg>
-                                        </Button>
-                                        <Form.Control.Feedback type="invalid">
-                                            Please choose city.
-                                        </Form.Control.Feedback>
-                                    </InputGroup>
-                                </Form>
-                            </Form.Group>
-                        </Col>
-                        <Col md={3}></Col>
-                    </Row>
-                    <Container className="mt-5">
+                    <Container className="">
                         <Row className="sub-container">
-                            <Col md={3}></Col>
-                            <Col md={6}>
+                            <Col lg={2} xl={3}></Col>
+                            <Col lg={8} xl={6}>
                                 <Row>
-                                    <Col md={12} className="weather-container">
-                                        <div className="mb-5">
-                                            <RenderWeather />
-                                        </div>
+                                    <Col>
+                                        <Form.Group>
+                                            <Form
+                                                onSubmit={handleSubmit}
+                                                noValidate
+                                                validated={validated}>
+                                                <InputGroup
+                                                    hasValidation
+                                                    className="mb-3"
+                                                    id="inputGroupPrepend">
+                                                    <FormControl
+                                                        className="form-field form-control-lg"
+                                                        type="text"
+                                                        placeholder="Enter city name"
+                                                        aria-describedby="inputGroupPrepend"
+                                                        required
+                                                        value={values.cityName}
+                                                        onChange={
+                                                            handleCityNameInputChange
+                                                        }
+                                                    />
+                                                    <Button
+                                                        variant="primary"
+                                                        id="button-addon2"
+                                                        type="submit">
+                                                        <svg
+                                                            xmlns="http://www.w3.org/2000/svg"
+                                                            width="16"
+                                                            height="16"
+                                                            fill="currentColor"
+                                                            className="bi bi-search"
+                                                            viewBox="0 0 16 16">
+                                                            <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z" />
+                                                        </svg>
+                                                    </Button>
+                                                    <Form.Control.Feedback type="invalid">
+                                                        Please choose city.
+                                                    </Form.Control.Feedback>
+                                                </InputGroup>
+                                            </Form>
+                                        </Form.Group>
                                     </Col>
-                                    <Col md={12} className="">
-                                        <div>
-                                            <RenderHourlyHeader />
-                                            <Row className="mb-5">
-                                                <RenderHourly />
-                                            </Row>
-                                        </div>
-                                    </Col>
-                                    <Col md={12}>
-                                        <RenderDailyHeader />
-                                        <RenderDaily />
+                                </Row>
+                                <Row>
+                                    <Col className="weather-container my-5 py-5">
+                                        <RenderWeather />
                                     </Col>
                                 </Row>
                             </Col>
-                            <Col md={3}></Col>
+                            <Col lg={2} xl={3}></Col>
                         </Row>
                     </Container>
                 </Row>
