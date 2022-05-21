@@ -160,7 +160,7 @@ export default function HomeComponent() {
             return <RenderLoader />;
         } else if (cityWeatherLoaded) {
             return (
-                <Row className="text-center">
+                <Row className="mt-4 text-center align-items-center">
                     <Col sm={6}>
                         <h1>
                             {cityWeather.name}, {cityWeather.sys.country}
@@ -285,7 +285,7 @@ export default function HomeComponent() {
                                 alt={`http://openweathermap.org/img/wn/${item.weather[0].description}`}
                             />
                         </Col>
-                        <Col md={1} className="me-5">
+                        <Col md={1} className="me-4">
                             <h3>
                                 {item.temp.max.toString().substring(0, 2)}
                                 &deg;
@@ -316,8 +316,8 @@ export default function HomeComponent() {
                 <Row className="form-container d-flex justify-content-center">
                     <Container className="">
                         <Row className="sub-container">
-                            <Col lg={2} xl={3}></Col>
-                            <Col lg={8} xl={6}>
+                            <Col lg={2} xl={4}></Col>
+                            <Col lg={8} xl={4}>
                                 <Row>
                                     <Col>
                                         <Form.Group>
@@ -327,7 +327,7 @@ export default function HomeComponent() {
                                                 validated={validated}>
                                                 <InputGroup
                                                     hasValidation
-                                                    className="mb-3"
+                                                    className="mb-5"
                                                     id="inputGroupPrepend">
                                                     <FormControl
                                                         className="form-field form-control-lg"
@@ -363,12 +363,12 @@ export default function HomeComponent() {
                                     </Col>
                                 </Row>
                                 <Row>
-                                    <Col className="weather-container my-5 py-5">
+                                    <Col className="weather-container mb-5">
                                         <RenderWeather />
                                     </Col>
                                 </Row>
                             </Col>
-                            <Col lg={2} xl={3}></Col>
+                            <Col lg={2} xl={4}></Col>
                         </Row>
                     </Container>
                 </Row>
